@@ -1,0 +1,280 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>日期计算器</title>
+    <meta name="description" content="时间小工具：计算两个日期之间相差多少天、相差几周、相差几个月；计算某日往后或者往前若干天、若干星期、若干月的日期。还提供其他一些日期推算工具。">
+    <style>
+        body {
+            background: #e7e7e7;
+            margin: 0;
+        }
+
+        body,
+        table,
+        div {
+            font-size: 1.3rem;
+            line-height: 2.0rem;
+        }
+
+        table {
+            border-collapse: collapse;
+            cursor: default;
+        }
+
+        input,
+        select {
+            height: 2.5rem;
+            font-size: 1.25rem;
+        }
+
+        .y {
+            width: 7rem;
+        }
+
+        .d {
+            width: 4rem;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <br>
+    <center>
+        <b>日期计算器</b>
+        <div>
+            <!-- <a href="http://bjtime.cn/">时间网</a> - <b>日期计算器_日期间隔和推算</b> -->
+
+
+            <br>
+            <br>
+
+            <script type="text/javascript" src="base.js"></script>
+
+            <script>
+                function dayadd() {
+                    var sy = parseInt($("SY").value);
+                    var sm = parseInt($("SM").value) - 1;
+                    var sd = parseInt($("SD").value);
+
+                    var day0 = new Date(sy, sm, sd);
+
+                    if (day0 == "Invalid Date") {
+                        alert("请输入正确日期");
+                        return;
+                    }
+
+                    var dnum = parseInt($("dnum").value) * $("pom").value;
+                    var dtype = $("dtype").value;
+
+                    if (dtype == 1) {
+                        day1 = new Date(sy, sm, sd + dnum);
+                    }
+                    if (dtype == 2) {
+                        day1 = new Date(sy, sm, sd + dnum * 7);
+                    }
+                    else if (dtype == 3) {
+                        day1 = new Date(sy, sm + dnum, sd);
+                    }
+
+
+                    $("result1").innerHTML = getdatestring(day1)
+
+                    localStorage.setItem("dayadd", $("dnum").value + "," + $("dtype").value + "," + $("pom").value);
+
+                    // LoadJs("s2l.php?c=" + Math.ceil(day1 / 86400000));
+                }
+
+
+                // function s2l(ly, lm, ld) {
+                //     $("nongli").innerHTML = ly != undefined ? getlinfo(ly, lm, ld) : "";
+
+                // }
+
+
+
+
+
+
+                function daydiff() {
+                    var y2 = parseInt($("SY2").value);
+                    var m2 = parseInt($("SM2").value);
+                    var d2 = parseInt($("SD2").value);
+                    var y3 = parseInt($("SY3").value);
+                    var m3 = parseInt($("SM3").value);
+                    var d3 = parseInt($("SD3").value);
+                    localStorage.setItem("diffc", y3 + "-" + m3 + "-" + d3);
+
+
+                    var day2 = new Date(y2, m2 - 1, d2);
+                    var day3 = new Date(y3, m3 - 1, d3);
+                    var dnum = (day3 - day2) / 86400000;
+
+
+                    var minfo = "";
+
+                    if (dnum > 0) {
+
+                        var mnum;
+                        var mleft;
+
+                        mnum = (y3 - y2) * 12 + (m3 - m2);
+                        if (d3 >= d2) {
+                            mleft = d3 - d2;
+                        }
+                        else {
+                            mnum--;
+                            mleft = (day3 - new Date(y3, m3 - 2, d2)) / 86400000;
+                        }
+
+                        minfo = " = " + Math.floor(dnum / 7) + "星期" + dnum % 7 + "天" + " = " + mnum + "个月" + mleft + "天";
+                    }
+
+
+                    $("result2").innerHTML = dnum + "天" + minfo;
+
+
+
+                }
+
+
+
+                function setday(ty, tm, td) {
+
+                    $("SY").value = ty;
+                    $("SM").value = tm;
+                    $("SD").value = td;
+
+
+                    $("SY2").value = ty;
+                    $("SM2").value = tm;
+                    $("SD2").value = td;
+
+
+                    var temp = localStorage.getItem("diffc");
+
+                    if (temp != null) {
+                        var ss = temp.split('-');
+                        $("SY3").value = ss[0];
+                        $("SM3").value = ss[1];
+                        $("SD3").value = ss[2];
+                    }
+                    else {
+                        $("SY3").value = ty + 1;
+                        $("SM3").value = 1;
+                        $("SD3").value = 1;
+                    }
+
+                    temp = localStorage.getItem("dayadd");
+                    if (temp != null) {
+                        var ss = temp.split(',');
+                        $("dnum").value = ss[0];
+                        $("dtype").value = ss[1];
+                        $("pom").value = ss[2];
+                    }
+                    else {
+                        $("dnum").value = 100;
+                    }
+
+                }
+
+            </script>
+
+
+
+
+
+            <b>一、计算两个日期之间差多少天</b>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            <input type="number" class="y" id="SY2" value="2020">年
+                            <input type="number" class="d" id="SM2" value="10">月
+                            <input type="number" class="d" id="SD2" value="1">日
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="1em" valign="top">
+                            距
+                        </td>
+                        <td><input type="number" class="y" id="SY3" value="2022">年
+                            <input type="number" class="d" id="SM3" value="1">月
+                            <input type="number" class="d" id="SD3" value="1">日
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            <input type="button" value=" 相 差 " onclick="daydiff()">
+                            <span id="result2"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <br>
+            <br>
+            <b>二、推算几天后的日期</b>
+
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            <input type="number" class="y" id="SY" name="SY" value="2020">年
+                            <input type="number" class="d" id="SM" name="SM" value="10">月
+                            <input type="number" class="d" id="SD" name="SD" value="1">日
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="1em">&nbsp;
+                        </td>
+                        <td>
+                            <select id="pom">
+                                <option value="1" selected="selected">往后</option>
+                                <option value="-1">往前</option>
+                            </select>
+
+                            <input type="number" class="y" id="dnum" value="300">
+                            <select id="dtype">
+                                <option value="1" selected="selected">天</option>
+                                <option value="2">星期</option>
+                                <option value="3">月</option>
+                            </select>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            <input type="button" value="   是   " onclick="dayadd()">
+
+                            <span id="result1"></span>
+                            &nbsp;<span id="nongli"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </center>
+    <br>
+    <br>
+
+
+
+</body>
+
+</html>
