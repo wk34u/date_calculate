@@ -48,8 +48,6 @@
     <center>
         <b>日期计算器</b>
         <div>
-            <!-- <a href="http://bjtime.cn/">时间网</a> - <b>日期计算器_日期间隔和推算</b> -->
-
 
             <br>
             <br>
@@ -183,6 +181,14 @@
 
                 }
 
+                function set_today(){
+                    var d=new Date();
+                    $("SY3").value=d.getFullYear();
+                    $("SM3").value=d.getMonth()+1;
+                    $("SD3").value=d.getDate();
+                }
+                
+
             </script>
 
 
@@ -247,7 +253,7 @@
                                 <option value="-1">往前</option>
                             </select>
 
-                            <input type="number" class="y" id="dnum" value="300">
+                            <input type="number" class="y" id="dnum" value="700">
                             <select id="dtype">
                                 <option value="1" selected="selected">天</option>
                                 <option value="2">星期</option>
@@ -272,6 +278,11 @@
     </center>
     <br>
     <br>
+    <script>
+        set_today()
+        daydiff()
+        dayadd()
+    </script>
 
 
 
